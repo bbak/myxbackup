@@ -19,12 +19,12 @@ by option -b.
 
 On all other days a incremental backup is done, if a corresponding full backup exists.
 
-When passing option -u the the scipt tries to set the open files limit (ulimit -n),
+When passing option -u the scipt tries to set the open files limit (ulimit -n),
 which may be required, if you have many databases/tables - at least with Debian wheezy.
 
 Old backups are automatically purged. 
 
-In case something goes wrong, any email is sent to the Adress provided in the crontab.
+In case something goes wrong, an email is sent to the Adress provided in the crontab.
 
 Since I don't want to pass around MySQL login & password in the shell, this script 
 (in fact it's innobackupex) relies on a .my.cnf in the home directory of the user 
@@ -39,3 +39,10 @@ password="yourpassword"
 
 This Script doesn't assist you in restoring backups. Read the innobackupex docs.
 
+If you need more advanced backup solutions, try:
+
+- [Zmanda Recovery Manager](http://www.zmanda.com/backup-mysql.html)
+- [XtraBackup Manager](https://code.google.com/p/xtrabackup-manager/), or
+- [myqbackup](https://github.com/ihanick/myqbackup)
+
+(thanx Alexey)
