@@ -4,7 +4,7 @@ myxbackup
 simple, cron-triggered backup script for MySQL Databases using Percona xtrabackup
 
 This is a simple Bash-Script trying to automate MySQL backups, using Persona's 
-excellent [xtrabackup(http://www.percona.com/doc/percona-xtrabackup/2.1/).
+excellent [xtrabackup](http://www.percona.com/doc/percona-xtrabackup/2.1/).
 
 It's intended to be run through CRON adding a crontab entry like this:
 
