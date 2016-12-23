@@ -143,7 +143,7 @@ function print_usage() {
     Currently only localhost can be backed up.
     This Script writes a log to the path passed in -b with filename innobackupex.log
 
-	OPTIONS:
+    OPTIONS:
       -h           Show this message and exit.
       -b [path]    (required) Base-Path for Backup files. The directory has to exist. Please omit the trailing /
       -d [number]  (required) Day of Week for full backup (Monday = 1)
@@ -151,9 +151,9 @@ function print_usage() {
                       deletes a full backup and all incremental ones, based on that.
                       Deletes are only done, if the (new) full backup succeeds.
       -u [number] (optional) if set tries to set ulimit -n to the provided value. May be needed in 
-	                  Debian (Wheezy+) if you have many Databases.
-	   
-	NOTE:
+                      Debian (Wheezy+) if you have many Databases.
+   
+    NOTE:
       Since we don't want to pass the MySQL Username and Password around in the Shell (or Cron),
       this script requires a .my.cnf file in the Home-Directory of the user executing it.
       The contents of this file should be (at least) like this:
@@ -161,7 +161,7 @@ function print_usage() {
       [client]
       user="username"
       password="password"
-    	
+ 
 EOF
 }
 
