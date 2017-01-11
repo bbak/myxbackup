@@ -60,10 +60,10 @@ function mk_backup() {
 	#
 	# full backup
 	if [ "$BACKUP_TYPE" == "full" ]; then
-		$INNOBACKUPBINARY --no-timestamp "$BACKUP_PATH" >"$BACKUP_LOG" 2>&1
+		$INNOBACKUPBINARY --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp "$BACKUP_PATH" >"$BACKUP_LOG" 2>&1
 	# incr backup
 	elif [ "$BACKUP_TYPE" == "incremental" ]; then
-		$INNOBACKUPBINARY --no-timestamp --incremental "$BACKUP_PATH" --incremental-basedir="$FULLBACKUP_PATH" >"$BACKUP_LOG" 2>&1
+		$INNOBACKUPBINARY --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp --incremental "$BACKUP_PATH" --incremental-basedir="$FULLBACKUP_PATH" >"$BACKUP_LOG" 2>&1
 	fi
 	#
 	# Handle result
@@ -77,6 +77,12 @@ function mk_backup() {
 	fi
 	# if there's a string like "120828 21:07:27  innobackupex: completed OK!" at the end of the file, the backup was successful.
 	grep -E "^[0-9]+.*completed OK\!" <"$BACKUP_LOG" >/dev/null
+	if [ $? -ne 0 ]; then
+		# failed, write syslog message
+		logger -p cron.err -t innobackup "Innobackup failed"
+	else
+		logger -p cron.info -t innobackup "Innobackup ok"
+	fi
 	return $?
 }
 #
@@ -136,7 +142,7 @@ function get_last_full_backup_date() {
 # print usage of this script
 #
 function print_usage() {
-	cat << EOF
+    cat << EOF
     usage: $0 options
 
     This script runs innobackupex according to options given.
@@ -182,8 +188,8 @@ function start_end_message() {
 #
 INNOBACKUPBINARY=$(which innobackupex)
 if [ ! -x "$INNOBACKUPBINARY" ]; then
-    echo $(format_message "Innobackup Binary not found. Cannot continue.") >&2
-    exit 3
+	echo $(format_message "Innobackup Binary not found. Cannot continue.") >&2
+	exit 3
 fi
 
 #
@@ -199,6 +205,13 @@ if [ -x "/bin/hostname" ]; then
 else
 	MY_HOSTNAME=$(cat /etc/hostname)
 fi
+# check if rsync can be used
+which rsync &>/dev/null
+if [ $? -eq 0 ]; then
+	IBOPT_RSYNC="--rsync"
+else
+	IBOPT_RSYNC=""
+if
 #
 # Variables for Options
 #
@@ -231,8 +244,8 @@ done
 # validate passed Options
 #
 if [ -z $BASEDIR ] || [ -z $DAY_OF_WEEK_FOR_FULL_BACKUP ] || [ -z $WEEKS_TO_KEEP ];then
-    print_usage
-    exit 1
+	print_usage
+	exit 1
 fi
 if [ ! -d $BASEDIR ] || [ ! -w $BASEDIR ];then
 	echo $(format_message "Directory $BASEDIR does not exist or is not writable.") >&2
