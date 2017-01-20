@@ -211,7 +211,7 @@ if [ $? -eq 0 ]; then
 	IBOPT_RSYNC="--rsync"
 else
 	IBOPT_RSYNC=""
-if
+fi
 #
 # Variables for Options
 #
