@@ -118,10 +118,16 @@ function rm_backups() {
 	for DEL in "${PATHS_TO_DEL[@]}"
 	do
 		rm -R "$DEL"
+		if [ $? -ne 0 ]; then
+			logger -p cron.warn -t innobackup "Failed to delete $DEL"
+		fi
 	done
 	for LOGDEL in "${LOGS_TO_DEL[@]}"
 	do
 		rm "$LOGDEL"
+		if [ $? -ne 0 ]; then
+			logger -p cron.warn -t innobackup "Failed to delete $LOGDEL"
+		fi
 	done
 	echo $(format_message "Old Backups purged.")
 	return 0
