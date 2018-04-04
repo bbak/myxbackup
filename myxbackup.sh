@@ -4,7 +4,7 @@
 # Exit Codes:
 # 0 - Backup succeeded
 # 1 - Backup failed (for some reason).
-# 3 - innobackupex binary not found
+# 3 - xtrabackup binary not found
 # 4 - incremental failed, because the full backup was not found.
 # 5 - unrecognized Option
 # 6 - failed to set ulimit
@@ -27,7 +27,7 @@ function mk_backup() {
 	local BACKUP_TYPE="$1"
 	local BACKUP_LOG="$BASEDIR/innobackupex_$(date +'%Y%m%d').log"
 	#
-	# prepare params for innobackupex binary
+	# prepare params for xtrabackup binary
 	#
 	# full backup
 	if [ "$BACKUP_TYPE" == "full" ]; then
@@ -71,7 +71,7 @@ function mk_backup() {
 	RETVAL=$?
 	if [ $RETVAL -ne 0 ]; then
 		if [ $RETVAL -eq 9 ]; then
-			echo $(format_message "Innobackup cannot connect to the Database") >&2
+			echo $(format_message "xtrabackup cannot connect to the Database") >&2
 		fi
 		return $RETVAL
 	fi
@@ -151,7 +151,7 @@ function print_usage() {
     cat << EOF
     usage: $0 options
 
-    This script runs innobackupex according to options given.
+    This script runs xtrabackup according to options given.
     Currently only localhost can be backed up.
     This Script writes a log to the path passed in -b with filename innobackupex.log
 
@@ -190,11 +190,11 @@ function start_end_message() {
 #
 
 #
-# check existance of innobackupex, exit 3 if not found
+# check existance of xtrabackup, exit 3 if not found
 #
-INNOBACKUPBINARY=$(which innobackupex)
+INNOBACKUPBINARY=$(which xtrabackup)
 if [ ! -x "$INNOBACKUPBINARY" ]; then
-	echo $(format_message "Innobackup Binary not found. Cannot continue.") >&2
+	echo $(format_message "xtrabackup Binary not found. Cannot continue.") >&2
 	exit 3
 fi
 
@@ -287,10 +287,10 @@ fi
 if [ $DAY_OF_WEEK -eq $DAY_OF_WEEK_FOR_FULL_BACKUP ]; then
 	mk_backup full
 	if [ $? -ne 0 ]; then
-		echo $(format_message "Innobackupex full Backup failed.") >&2
+		echo $(format_message "xtrabackup full Backup failed.") >&2
 		echo $(start_end_message) >&2
 	else
-		echo $(format_message "Innobackupex full Backup succeeded.")
+		echo $(format_message "xtrabackup full Backup succeeded.")
 		# check, if there are Backups to delete
 		rm_backups
 		if [ $? -ne 0 ]; then
@@ -302,10 +302,10 @@ if [ $DAY_OF_WEEK -eq $DAY_OF_WEEK_FOR_FULL_BACKUP ]; then
 else
 	mk_backup incremental
 	if [ $? -ne 0 ]; then
-		echo $(format_message "Innobackupex incremental Backup failed.") >&2
+		echo $(format_message "xtrabackup incremental Backup failed.") >&2
 		echo $(start_end_message) >&2
 	else
-		echo $(format_message "Innobackupex incremental Backup succeeded.")
+		echo $(format_message "xtrabackup incremental Backup succeeded.")
 		echo $(start_end_message)
 	fi
 	exit $?
