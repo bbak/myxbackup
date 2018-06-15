@@ -60,10 +60,10 @@ function mk_backup() {
 	#
 	# full backup
 	if [ "$BACKUP_TYPE" == "full" ]; then
-		$INNOBACKUPBINARY --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp "$BACKUP_PATH" >"$BACKUP_LOG" 2>&1
+		$INNOBACKUPBINARY --backup --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp --target-dir="$BACKUP_PATH" >"$BACKUP_LOG" 2>&1
 	# incr backup
 	elif [ "$BACKUP_TYPE" == "incremental" ]; then
-		$INNOBACKUPBINARY --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp --incremental "$BACKUP_PATH" --incremental-basedir="$FULLBACKUP_PATH" >"$BACKUP_LOG" 2>&1
+		$INNOBACKUPBINARY --backup --ssl-mode=DISABLED $IBOPT_RSYNC --no-timestamp --target-dir="$BACKUP_PATH" --incremental-basedir="$FULLBACKUP_PATH" >"$BACKUP_LOG" 2>&1
 	fi
 	#
 	# Handle result
