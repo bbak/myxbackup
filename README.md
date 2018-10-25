@@ -27,7 +27,7 @@ Old backups are automatically purged.
 In case something goes wrong, an email is sent to the Adress provided in the crontab.
 
 Since I don't want to pass around MySQL login & password in the shell, this script 
-(in fact it's innobackupex) relies on a .my.cnf in the home directory of the user 
+(in fact it's innobackupex) relies on a `.my.cnf` in the home directory of the user 
 executing the script, keeping the login-credentials.
 It should look like this:
 
@@ -36,6 +36,8 @@ It should look like this:
 user="yourusername"
 password="yourpassword"
 ```
+Note: Recent MySQL Versions may be set up to use Socket Authentication. If the user
+used to execute this script is set up this way, you obviously don't need the `.my.cnf`.
 
 This Script doesn't assist you in restoring backups. Read the innobackupex docs.
 
